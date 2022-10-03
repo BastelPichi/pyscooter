@@ -29,5 +29,5 @@ For example for Bolt:
 
 .. note::
    
-    Bolt is currently the only suported provider.
+    Bolt is currently the only suported provider. Others soon to come.
     
