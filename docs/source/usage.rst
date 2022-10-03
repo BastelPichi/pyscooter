@@ -24,6 +24,7 @@ Importing
 Each provider has its own file in the ``providers`` folder. We trie to keep the functions of each provider similar, however this is often difficult as the APIs are different.
 
 For example for Bolt:
+
 >>> from pyscooter.providers.bolt import Bolt
 
 .. note::
