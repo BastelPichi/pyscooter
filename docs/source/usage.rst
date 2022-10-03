@@ -31,3 +31,10 @@ For example for Bolt:
    
     Bolt is currently the only suported provider. Others soon to come.
     
+
+
+The class then has different methods and different init parameters. Please take a look at the individual documents.
+
+.. toctree::
+
+   providers
