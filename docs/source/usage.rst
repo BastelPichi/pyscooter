@@ -25,7 +25,7 @@ Each provider has its own file in the ``providers`` folder. We trie to keep the 
 
 For example for Bolt:
 
->>> from pyscooter.providers.bolt import Bolt
+   >>> from pyscooter.providers.bolt import Bolt
 
 .. note::
    
