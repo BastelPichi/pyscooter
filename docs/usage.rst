@@ -34,7 +34,3 @@ For example for Bolt:
 
 
 The class then has different methods and different init parameters. Please take a look at the individual documents.
-
-.. toctree::
-
-   providers

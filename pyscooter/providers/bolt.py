@@ -4,6 +4,11 @@ import requests
 
 class Bolt:
     def __init__(self, phone=None, uuid=None, server_url=""):
+        """Initializes a Bolt class.
+        
+        :param phone: Optional, can be set later: the phone number your account is linked to. (International format)
+        :param uuid: Optional, can be set later: a randomly generated UUID. Must stay the same for every call over your account.
+        """
         self.base_url = "https://node.bolt.eu"
         self.search_url = "https://rental-search.bolt.eu"
         self.server_url = server_url
@@ -44,7 +49,14 @@ class Bolt:
 
 
     def login(self, phone: str, uuid: str) -> bool:
-        """Set phone and uuid."""
+        """Set phone and uuid.
+        
+        :param phone: The phone number your account is linked to. (International format)
+        :param uuid: A randomly generated UUID. Must stay the same for every call over your account.
+
+        :return: ``True``, won't get validated.
+        """
+
         self.uuid = uuid
         self.phone = phone
 
@@ -52,7 +64,13 @@ class Bolt:
 
 
     def set_location(self, latitude: int, longitude: int) -> bool:
-        """Set latitude and longitude."""
+        """Set latitude and longitude.
+        
+        :param latitude: Latitude of the location you want to set.
+        :param longitude: Longitude of the location you want to set.
+
+        :return: ``True``, won't get validated.
+        """
         self.latitude = latitude
         self.longitude = longitude
 
@@ -60,7 +78,12 @@ class Bolt:
 
 
     def get_number_international_format(self):
-        """Get phone number in international format."""
+        """Get phone number in international format.
+
+        Phone number and UUID must be set via .login() or during intializing.
+
+        :return: dict with phone number in international format and status code.
+        """
         self._check()
 
         params = {
@@ -75,16 +98,16 @@ class Bolt:
 
         r = requests.get(f"{self.base_url}/user/user/getMobileNumberInInternationalFormat", params=params, headers=self.headers)
         
-        result = r.json()
-
-        if result["code"] == 0:
-            return result["data"]["phone_number_in_international_format"]
-        else:
-            raise Exception(result)
+        return r.json()
 
 
     def request_sms(self):
-        """Request sms code."""
+        """Sends an SMS with a code to your phone.
+        
+        Phone number and UUID must be set via .login() or during intializing.
+
+        :return: dict with status code.
+        """
         self._check()
 
         params = {
@@ -104,16 +127,16 @@ class Bolt:
 
         r = requests.post(f"{self.base_url}/user/user/register/phone", data=data, params=params, headers=self.headers)
 
-        result = r.json()
-
-        if result["code"] == 0:
-            return True
-        else:
-            raise Exception(result)
+        return r.json()
 
 
     def submit_sms_code(self, code: str):
-        """Submit sms code, request with request_sms()."""
+        """Submit the sms code, request one with request_sms().
+        
+        Phone number and UUID must be set via .login() or during intializing.
+
+        :param code: The code you received via SMS.
+        """
         self._check()
 
         params = {
@@ -139,16 +162,16 @@ class Bolt:
 
         r = requests.post(f"{self.base_url}/user/user/v1/confirmVerification", json=json, params=params, headers=self.headers)
 
-        result = r.json()
 
-        if result["code"] == 0:
-            return r.json()["data"]
-        else:
-            raise Exception(result)
+        return r.json()
+
 
 
     def get_scooters(self, latitude, longitude):
-        """Get all scooters in area."""
+        """Get all scooters in area.
+        
+        Phone number and UUID must be set via .login() or during intializing.
+        """
         self._check()
 
         params = {
@@ -167,16 +190,17 @@ class Bolt:
 
         result = r.json()
 
-        self.server_url = result["data"]["server_url"]
-
         if result["code"] == 0:
-            return result["data"]["categories"][0]["vehicles"]
-        else:
-            raise Exception(result)
+            self.server_url = result["data"]["server_url"]
+
+        return result
 
 
     def get_scooter(self, code):
-        """Get scooter information by code, includes vehicle_id."""
+        """Get scooter information by code, includes vehicle_id.
+        
+        Phone number and UUID must be set via .login() or during intializing.
+        """
         self._check()
         
         if not self.server_url:
@@ -193,16 +217,16 @@ class Bolt:
 
         r = requests.get(f"{self.server_url}/client/getVehicleDetails", params=params, headers=self._auth_headers())
 
-        result = r.json()
+        return r.json()
 
-        if result["code"] == 0:
-            return result["data"]
-        else:
-            raise Exception(result)
+
 
 
     def get_scooter_info(self, code, type="uuid"):
-        """Get detailed scooter information, including batery percentage."""
+        """Get detailed scooter information, including batery percentage.
+        
+        Phone number and UUID must be set via .login() or during intializing.
+        """
         self._check()
 
         params = {
@@ -227,10 +251,14 @@ class Bolt:
 
         r = requests.post(f"{self.server_url}/micromobility/user/ui/vehicle/card", params=params, json=json, headers=self._auth_headers())
 
-        print(r.text)
+        return r.json()
+
 
     def ring_scooter(self, vehicle_id):
-        """Ring scooter by vehicle_id."""
+        """Ring scooter by vehicle_id.
+        
+        Phone number and UUID must be set via .login() or during intializing.
+        """
         self._check()
 
         params = {
@@ -250,16 +278,14 @@ class Bolt:
 
         r = requests.post(f"{self.server_url}/client/ringVehicle", data=data, params=params, headers=self._auth_headers())
 
-        result = r.json()
-
-        if result["code"] == 0:
-            return True
-        else:
-            raise Exception(result)
+        return r.json()
 
     
     def start_rent(self, code, payment_id):
-        """Start rent by scooter code."""
+        """Start rent by scooter code.
+        
+        Phone number and UUID must be set via .login() or during intializing.
+        """
         self._check()
 
         params = {
@@ -290,7 +316,10 @@ class Bolt:
 
 
     def get_order(self, order_id):
-        """Get order information by order_id."""
+        """Get order information by order_id.
+        
+        Phone number and UUID must be set via .login() or during intializing.
+        """
         self._check()
 
         params = {
@@ -313,7 +342,10 @@ class Bolt:
 
 
     def check_location(self, action, vehicle_id):
-        """Check if scooter is in a non-parking area."""
+        """Check if scooter is in a non-parking area.
+        
+        Phone number and UUID must be set via .login() or during intializing.
+        """
         self._check()
 
         params = {
@@ -331,16 +363,14 @@ class Bolt:
 
         r = requests.get(f"{self.server_url}/client/checkLocation", params=params, headers=self._auth_headers())
 
-        result = r.json()
-
-        if result["code"] == 0:
-            return True
-        else:
-            raise Exception(result)
+        return r.json()
 
     
     def stop_rent(self, order_id):
-        """Stop rent by order_id."""
+        """Stop rent by order_id.
+        
+        Phone number and UUID must be set via .login() or during intializing.
+        """
         self._check()
         
         params = {
@@ -366,7 +396,7 @@ class Bolt:
         result = r.json()
 
         if result["code"] != 0:
-            raise Exception(result)
+            print("Note: Stopping rent may have failed.")
 
         json = {
             "order_id": order_id,
@@ -377,10 +407,4 @@ class Bolt:
 
         r = requests.post(f"{self.server_url}/micromobility/user/order/finish", json=json, params=params, headers=self._auth_headers())
 
-        result = r.json()
-
-        if result["code"] != 0:
-            raise Exception(result)
-
-        else:
-            return result
+        return r.json()
