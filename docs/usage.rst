@@ -15,7 +15,7 @@ To use Lumache, first install it using pip:
 
 .. note::
     
-    The library isn't finished yet. Please download the appropiate file from the provider folder manually, or wait for the relase. The pip version is empty
+    The pip version may be a few commits behind.
 
 
 
