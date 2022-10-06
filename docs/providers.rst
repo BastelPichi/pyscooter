@@ -11,6 +11,8 @@ Bolt
 
 .. autoclass:: pyscooter.providers.bolt.Bolt
 
-.. autofunction:: pyscooter.providers.bolt.Bolt.login
+.. module:: pyscooter.providers.bolt.Bolt
+
+.. autofunction:: login
 
 .. autofunction:: pyscooter.providers.bolt.Bolt.get_number_international_format
