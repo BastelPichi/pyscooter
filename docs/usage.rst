@@ -6,7 +6,7 @@ Usage
 Installation
 ------------
 
-To use Lumache, first install it using pip:
+To use pyscooter, first install it using pip:
 
 .. code-block:: console
 
@@ -21,7 +21,7 @@ To use Lumache, first install it using pip:
 
 Importing
 ---------
-Each provider has its own file in the ``providers`` folder. We trie to keep the functions of each provider similar, however this is often difficult as the APIs are different.
+Each provider has its own file in the ``providers`` folder. We try to keep the functions of each provider similar, however this is often difficult as the APIs are different.
 
 For example for Bolt:
 
@@ -33,4 +33,4 @@ For example for Bolt:
     
 
 
-The class then has different methods and different init parameters. Please take a look at the individual documents.
+The classes often have different methods and different init parameters. Please take a look at the individual documents.
