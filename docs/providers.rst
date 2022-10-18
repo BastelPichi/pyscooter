@@ -15,4 +15,26 @@ Bolt
 
 .. autofunction:: login
 
-.. autofunction:: pyscooter.providers.bolt.Bolt.get_number_international_format
+.. autofunction:: set_location
+
+.. autofunction:: get_number_international_format
+
+.. autofunction:: request_sms
+
+.. autofunction:: submit_sms_code
+
+.. autofunction:: get_scooters
+
+.. autofunction:: get_scooter
+
+.. autofunction:: get_scooter_info
+
+.. autofunction:: ring_scooter
+
+.. autofunction:: start_rent
+
+.. autofunction:: get_order
+
+.. autofunction:: check_location
+
+.. autofunction:: stop_rent
