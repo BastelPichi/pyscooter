@@ -66,8 +66,8 @@ class Bolt:
     def set_location(self, latitude: int, longitude: int) -> bool:
         """Set latitude and longitude.
         
-        :param latitude: Latitude of the location you want to set.
-        :param longitude: Longitude of the location you want to set.
+        :param latitude: Latitude as int.
+        :param longitude: Longitude as int.
 
         :return: ``True``, won't get validated.
         """
@@ -136,6 +136,8 @@ class Bolt:
         Phone number and UUID must be set via .login() or during intializing.
 
         :param code: The code you received via SMS.
+        
+        :return: dict with status code.
         """
         self._check()
 
@@ -166,11 +168,16 @@ class Bolt:
         return r.json()
 
 
-
     def get_scooters(self, latitude, longitude):
         """Get all scooters in area.
         
         Phone number and UUID must be set via .login() or during intializing.
+        This endpoint will set ``server_url``.
+        
+        :param latitude: Longitude as int.
+        :param longitude: Latitude as int.
+        
+        :return: dict with status code and all scooters in the zone, according to your coordinates.
         """
         self._check()
 
@@ -200,6 +207,8 @@ class Bolt:
         """Get scooter information by code, includes vehicle_id.
         
         Phone number and UUID must be set via .login() or during intializing.
+        
+        :return: dict with status code and information about scooter.
         """
         self._check()
         
@@ -218,14 +227,17 @@ class Bolt:
         r = requests.get(f"{self.server_url}/client/getVehicleDetails", params=params, headers=self._auth_headers())
 
         return r.json()
-
-
-
-
+    
+    
     def get_scooter_info(self, code, type="uuid"):
         """Get detailed scooter information, including batery percentage.
         
         Phone number and UUID must be set via .login() or during intializing.
+        
+        :param type: ``uuid`` or ``vehicle_id``.
+        :param code: UUID or vehicle id, depending on what you set via type.
+        
+        :return: dict with status code and information about scooter.
         """
         self._check()
 
@@ -254,18 +266,23 @@ class Bolt:
         return r.json()
 
 
-    def ring_scooter(self, vehicle_id):
+    def ring_scooter(self, vehicle_id: str, latitude: int, longitude: int):
         """Ring scooter by vehicle_id.
         
         Phone number and UUID must be set via .login() or during intializing.
+        
+        :param latitude: Latitude as int.
+        :param longitude: Longitude as int.
+        
+        :return: dict with status code
         """
         self._check()
 
         params = {
             "version": "CA.47.1",
             "deviceId": self.uuid,
-            "gps_lat": self.latitude,
-            "gps_lng": self.longitude,
+            "gps_lat": latitude,
+            "gps_lng": longitude,
             "deviceType": "android",
             "language": "en",
             "device_name": "GenymobileGoogle Pixel 3",
@@ -281,10 +298,15 @@ class Bolt:
         return r.json()
 
     
-    def start_rent(self, code, payment_id):
-        """Start rent by scooter code.
+    def start_rent(self, code: str, payment_id: str):
+        """Start rent.
         
         Phone number and UUID must be set via .login() or during intializing.
+        
+        :param code: Code on the scooter (uuid)
+        :param payment_id: Payment ID, get by sniffing http traffic from app. Endpoint for this soon.
+        
+        :return: dict with status code and ``order_id``.
         """
         self._check()
 
@@ -319,6 +341,7 @@ class Bolt:
         """Get order information by order_id.
         
         Phone number and UUID must be set via .login() or during intializing.
+        
         """
         self._check()
 
