@@ -3,7 +3,7 @@ import requests
 
 
 class Bolt:
-    def __init__(self, phone=None, uuid=None, server_url=""):
+    def __init__(self, phone, uuid, server_url=""):
         """Initializes a Bolt class.
         
         :param phone: Optional, can be set later: the phone number your account is linked to. (International format)
@@ -25,14 +25,8 @@ class Bolt:
 
 
     def _check(self):
-        if not self.phone and not self.uuid:
-            raise Exception("You need to authenticate first")
-
-        if not self.phone:
-            raise Exception("No phone number linked")
-
-        if not self.uuid:
-            raise Exception("No uuid linked")
+        if not self.server_url:
+            raise Exception("No server_url!")
 
 
     def _auth_headers(self):
@@ -49,7 +43,7 @@ class Bolt:
 
 
     def login(self, phone: str, uuid: str) -> bool:
-        """Set phone and uuid.
+        """Change phone and uuid. (Change account)
         
         :param phone: The phone number your account is linked to. (International format)
         :param uuid: A randomly generated UUID. Must stay the same for every call over your account.
@@ -76,98 +70,7 @@ class Bolt:
 
         return True
 
-
-    def get_number_international_format(self):
-        """Get phone number in international format.
-
-        Phone number and UUID must be set via .login() or during intializing.
-
-        :return: dict with phone number in international format and status code.
-        """
-        self._check()
-
-        params = {
-            "phone": self.phone,
-            "version": "CA.47.1",
-            "deviceId": self.uuid,
-            "device_name": "GenymobileGoogle Pixel 3",
-            "device_os_version": 10,
-            "deviceType": "android",
-            "language": "en"
-        }
-
-        r = requests.get(f"{self.base_url}/user/user/getMobileNumberInInternationalFormat", params=params, headers=self.headers)
-        
-        return r.json()
-
-
-    def request_sms(self):
-        """Sends an SMS with a code to your phone.
-        
-        Phone number and UUID must be set via .login() or during intializing.
-
-        :return: dict with status code.
-        """
-        self._check()
-
-        params = {
-            "preferred_verification_method": "sms",
-            "device_name": "GenymobileGoogle Pixel 3",
-            "device_os_version": 10,
-            "deviceType": "android",
-            "language": "en",
-            "version": "CA.47.1",
-            "deviceId": self.uuid
-        }
-
-        data = {
-            "phone": self.phone,
-            "phone_uuid": self.uuid
-        }
-
-        r = requests.post(f"{self.base_url}/user/user/register/phone", data=data, params=params, headers=self.headers)
-
-        return r.json()
-
-
-    def submit_sms_code(self, code: str):
-        """Submit the sms code, request one with request_sms().
-        
-        Phone number and UUID must be set via .login() or during intializing.
-
-        :param code: The code you received via SMS.
-        
-        :return: dict with status code.
-        """
-        self._check()
-
-        params = {
-            "preferred_verification_method": "sms",
-            "device_name": "GenymobileGoogle Pixel 3",
-            "device_os_version": 10,
-            "deviceType": "android",
-            "language": "en",
-            "version": "CA.47.1",
-            "deviceId": self.uuid
-        }
-
-        json = {
-            "phone": self.phone,
-            "phone_uuid": self.uuid,
-            "verification": {
-                "confirmation_data": {
-                    "code": code
-                },
-                "method": "sms"
-            }
-        }
-
-        r = requests.post(f"{self.base_url}/user/user/v1/confirmVerification", json=json, params=params, headers=self.headers)
-
-
-        return r.json()
-
-
+    
     def get_scooters(self, latitude, longitude):
         """Get all scooters in area.
         
